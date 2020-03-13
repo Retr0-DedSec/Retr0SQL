@@ -1,0 +1,135 @@
+#!/bin/bash
+
+#=================================== Config Module ==================================================#
+
+#=========================#
+#     Colors module       #
+#=========================#
+
+def="\e[1;"
+white="${def}97m"
+red="${def}91m"
+cyan="${def}96m"
+magenta="${def}95m"
+green="${def}92m"
+yellow="${def}93m"
+
+#=========================#
+#  Colors sub module      #
+#=========================#
+
+blink="${def}5m"
+reset="${def}0m"
+hidden="${def}8m"
+
+#===================#
+#  ROOT PRIVILEGIES #
+#===================#
+
+if [[ $EUID -ne 0 ]]; then
+        echo -e "$red You don't have Root privilegies, execute the script as root.$nc"
+        exit 1
+fi
+
+#======= Edit here ========#
+
+output="~/Retr0SQL/output/"
+author="Retr0"
+vers="1.0"
+
+
+check_module() {
+clear 
+sleep 1
+figlet -f standard Retr0SQL | lolcat
+echo -e "[ ${blink}Checking ${reset}]\n"
+
+if [ -d ~/Retr0SQL ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Retr0SQL Directory                 ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Retr0SQL Directory                 ${yellow}[ ${red}Not Detected ${yellow}]"
+exit 0
+fi
+
+if [ -d ~/Retr0SQL/output ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Output Directory                   ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Output Directory                   ${yellow}[ ${red}Not Detected ${yellow}]"
+echo -e $white"  - output directory was created!. Please re-install."
+mkdir output
+exit 0
+fi
+
+if [ -e ~/Retr0SQL/Retr0SQL ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Retr0SQL File                      ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Retr0SQL File                      ${yellow}[ ${red}Not Detected ${yellow}]"
+exit 0
+fi
+
+if [ -e ~/Retr0SQL/config ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Config File                        ${yellow}[ ${green}Detected ${yellow}]"
+else 
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Config File                        ${yellow}[ ${red}Not Detected ${yellow}]"
+exit 0
+fi
+
+if [ -x /usr/bin/sqlmap ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Sqlmap                             ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Sqlmap                             ${yellow}[ ${red}Not Detected ${yellow}]"
+apt-get install sqlmap
+echo -e $white"  - cowsay package installed. Please re-install."
+exit 0
+fi
+
+if [ -x /usr/local/bin/lolcat ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}lolcat                             ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}lolcat                             ${yellow}[ ${red}Not Detected ${yellow}]"
+pip3 install lolcat
+echo -e $white"  - cowsay package installed. Please re-install."
+exit 0
+fi
+
+if [ -x /usr/bin/figlet ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}figlet                             ${yellow}[ ${green}Detected ${yellow}]"
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}figlet                             ${yellow}[ ${red}Not Detected ${yellow}]"
+apt-get install figlet -y
+echo -e $white"  - cowsay package installed. Please re-install."
+exit 0
+fi
+
+if [ -x /usr/local/bin/cowsay ]; then
+sleep 1.8
+echo -e $yellow"[${green}+${yellow}] ${green}Cowsay                             ${yellow}[ ${green}Detected ${yellow}]\n"
+sleep 1.8
+echo -e $cyan"Checking Completed!...."
+sleep 1.8
+clear
+else
+sleep 1.8
+echo -e $yellow"[${red}-${yellow}] ${red}Cowsay                             ${yellow}[ ${red}Not Detected ${yellow}]"
+pip3 install cowsay
+echo -e $white"  - cowsay package installed. Please re-install."
+exit 0
+fi
+
+}
+
+#===================================================================================================#

